@@ -5,6 +5,7 @@ import java.util.Stack;
 public class InfixCalculator {
     private Stack operatorStack = new Stack<Character>();
     private Stack operandStack = new Stack<Integer>();
+    boolean popStack = false;
 
     public int calculate(String expression) {
         populateStacks(expression);
@@ -23,26 +24,45 @@ public class InfixCalculator {
                     String newInt = String.valueOf(prevInt) + String.valueOf(item);
                     operandStack.push(Integer.valueOf(newInt));
                 } else {
-                    seenNumeric = true;
                     operandStack.push(Character.getNumericValue(item));
+                    if (popStack) {
+                        evaluateExpression();
+                        popStack = false;
+                    }
+                    seenNumeric = true;
                 }
             } else if (! Character.isSpaceChar(item)) {
                 seenNumeric = false;
+                handleOperatorCharacter(item);
                 operatorStack.push(item);
             }
         }
     }
 
+    private void handleOperatorCharacter(char operator) {
+        switch (operator) {
+            case '*':case '/':
+                popStack = true;
+                break;
+            default:
+                popStack = false;
+        }
+    }
+
     private void evaluateStacks() {
         while ( !operatorStack.isEmpty() ) {
-            char operator = (char) operatorStack.pop();
-            int value1 = (int) operandStack.pop();
-            int value2 = (int) operandStack.pop();
-            try {
-                operandStack.push(handleOperator(operator, value2, value1));
-            } catch (InvalidOperatorException e) {
-                e.printStackTrace();
-            }
+            evaluateExpression();
+        }
+    }
+
+    private void evaluateExpression() {
+        char operator = (char) operatorStack.pop();
+        int value1 = (int) operandStack.pop();
+        int value2 = (int) operandStack.pop();
+        try {
+            operandStack.push(handleOperator(operator, value2, value1));
+        } catch (InvalidOperatorException e) {
+            e.printStackTrace();
         }
     }
 

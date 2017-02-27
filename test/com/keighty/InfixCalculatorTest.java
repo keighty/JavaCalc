@@ -19,7 +19,9 @@ public class InfixCalculatorTest extends InfixCalculator {
         MULTIPLICATION("5*4*2", 40),
         DIVISION("9/3", 3),
         ADDITION_WITH_SPACES("5 + 7", 12),
-        MULTI_DIGITS("12 + 3 - 5", 10);
+        MULTI_DIGITS("12 + 3 - 5", 10),
+        MULTI_DIGIT_MULTIPLICATION("12*6*2", 144),
+        MIXED_MULTIPLY_AND_ADD("12 * 6 + 2", 74);
 
         final String expression;
         final int result;
@@ -39,5 +41,11 @@ public class InfixCalculatorTest extends InfixCalculator {
         for (Expression exp : Expression.values()) {
             assertEquals("for expression " + exp.expression, exp.result, icalc.calculate(exp.expression));
         }
+    }
+
+    @Test
+    public void test_solves_one_expression() {
+        Expression exp = Expression.MIXED_MULTIPLY_AND_ADD;
+        assertEquals("for expression " + exp.expression, exp.result, icalc.calculate(exp.expression));
     }
 }
