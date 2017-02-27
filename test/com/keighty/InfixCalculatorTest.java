@@ -18,7 +18,8 @@ public class InfixCalculatorTest extends InfixCalculator {
         SUBTRACTION("9-4", 5),
         MULTIPLICATION("5*4*2", 40),
         DIVISION("9/3", 3),
-        ADDITION_WITH_SPACES("5 + 7", 12);
+        ADDITION_WITH_SPACES("5 + 7", 12),
+        MULTI_DIGITS("12 + 3 - 5", 10);
 
         final String expression;
         final int result;
