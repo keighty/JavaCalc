@@ -21,24 +21,25 @@ public class InfixCalculator {
             char operator = (char) operatorStack.pop();
             int value1 = (int) operandStack.pop();
             int value2 = (int) operandStack.pop();
-            switch (operator) {
-                case '+':
-                    operandStack.push(value2 + value1);
-                    break;
-                case '-':
-                    operandStack.push(value2 - value1);
-                    break;
-                case '*':
-                    operandStack.push(value2 * value1);
-                    break;
-                case '/':
-                    operandStack.push(value2 / value1);
-                    break;
-                default:
-                    throw new InvalidOperatorException("invalid operator: " + operator);
-            }
+            operandStack.push(handleOperator(operator, value2, value1));
+
         }
 
         return (int) operandStack.pop();
+    }
+
+    private int handleOperator(char operator, int operand1, int operand2) throws InvalidOperatorException {
+        switch (operator) {
+            case '+':
+                return operand1 + operand2;
+            case '-':
+                return operand1 - operand2;
+            case '*':
+                return operand1 * operand2;
+            case '/':
+                return operand1 / operand2;
+            default:
+                throw new InvalidOperatorException("invalid operator: " + operator);
+        }
     }
 }
