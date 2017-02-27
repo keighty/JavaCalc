@@ -12,7 +12,7 @@ public class InfixCalculator {
                 charArr) {
             if (Character.isDigit(item)) {
                 operandStack.push(Character.getNumericValue(item));
-            } else {
+            } else if (! Character.isSpaceChar(item)) {
                 operatorStack.push(item);
             }
         }
