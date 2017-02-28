@@ -23,7 +23,8 @@ public class InfixCalculatorTest extends InfixCalculator {
         MIXED_MULTIPLY_AND_ADD("12 * 6 + 2", 74),
         MIXED_MULTIPLY_AND_ADD_INVERSE("2 + 12 * 6", 74),
         ZERO_MULTIPLIER("0 * 4567", 0),
-        ZERO_INVERSE_MULTIPLIER("4 + 0 * 78903", 4);
+        ZERO_INVERSE_MULTIPLIER("4 + 0 * 78903", 4),
+        SIMPLE_PARENS("1 + (2 * 3)", 7);
 
         final String expression;
         final int result;
@@ -39,21 +40,27 @@ public class InfixCalculatorTest extends InfixCalculator {
     }
 
     @Test
-    public void test_solves_an_expression() throws InvalidOperatorException {
+    public void test_solves_an_expression() throws InvalidOperatorException, InvalidInputException {
         for (Expression exp : Expression.values()) {
             assertEquals("for expression " + exp.expression, exp.result, icalc.calculate(exp.expression));
         }
     }
 
     @Test
-    public void test_solves_one_expression() throws InvalidOperatorException {
-        Expression exp = Expression.ZERO_MULTIPLIER;
+    public void test_solves_one_expression() throws InvalidOperatorException, InvalidInputException {
+        Expression exp = Expression.SIMPLE_PARENS;
         assertEquals("for expression " + exp.expression, exp.result, icalc.calculate(exp.expression));
     }
 
     @Test(expected=InvalidOperatorException.class)
-    public void test_handles_invalid_input() throws InvalidOperatorException {
+    public void test_handles_invalid_input() throws InvalidOperatorException, InvalidInputException {
         String invalidInput = "a+b+c";
+        icalc.calculate(invalidInput);
+    }
+
+    @Test(expected=InvalidInputException.class)
+    public void test_handles_empty_input() throws InvalidOperatorException, InvalidInputException {
+        String invalidInput = "";
         icalc.calculate(invalidInput);
     }
 }

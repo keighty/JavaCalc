@@ -5,9 +5,11 @@ import java.util.Stack;
 public class InfixCalculator {
     private Stack operatorStack = new Stack<Character>();
     private Stack operandStack = new Stack<Integer>();
-    boolean popStack;
+    private boolean popStack;
+    private boolean popFullStack;
 
-    public int calculate(String expression) throws InvalidOperatorException {
+    public int calculate(String expression) throws InvalidOperatorException, InvalidInputException {
+        if (expression.isEmpty()) throw new InvalidInputException("Invalid input: empty string");
         popStack = false;
         populateStacks(expression);
         evaluateStacks();
@@ -28,7 +30,7 @@ public class InfixCalculator {
                 }
             } else if (! Character.isSpaceChar(item)) {
                 seenNumeric = false;
-                if (popStack) {
+                if (popStack || popFullStack) {
                     evaluateExpression();
                     popStack = false;
                 }
@@ -56,6 +58,12 @@ public class InfixCalculator {
             case '+':case '-':
                 popStack = false;
                 break;
+            case '(':
+                popFullStack = false;
+                break;
+            case ')':
+                popFullStack = true;
+                break;
             default:
                 throw new InvalidOperatorException("invalid input: " + operator);
         }
@@ -71,6 +79,7 @@ public class InfixCalculator {
         if (operandStack.isEmpty()) throw new UnsupportedOperationException("no operand available");
 
         char operator = (char) operatorStack.pop();
+        if (operator == ')' || operator == '(') return;
         int value1 = (int) operandStack.pop();
         int value2 = (int) operandStack.pop();
         try {
