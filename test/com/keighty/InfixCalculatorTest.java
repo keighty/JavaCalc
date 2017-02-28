@@ -11,7 +11,6 @@ import static org.junit.Assert.assertEquals;
 public class InfixCalculatorTest extends InfixCalculator {
 
     private InfixCalculator icalc;
-    private String testExpression1 = "1 + 2 * 3";
 
     private enum Expression {
         ADDITION("1+2+3", 6),
@@ -22,7 +21,9 @@ public class InfixCalculatorTest extends InfixCalculator {
         MULTI_DIGITS("12 + 3 - 5", 10),
         MULTI_DIGIT_MULTIPLICATION("12*6*2", 144),
         MIXED_MULTIPLY_AND_ADD("12 * 6 + 2", 74),
-        MIXED_MULTIPLY_AND_ADD_INVERSE("2 + 12 * 6", 74);
+        MIXED_MULTIPLY_AND_ADD_INVERSE("2 + 12 * 6", 74),
+        ZERO_MULTIPLIER("0 * 4567", 0),
+        ZERO_INVERSE_MULTIPLIER("4 + 0 * 78903", 4);
 
         final String expression;
         final int result;
@@ -46,7 +47,7 @@ public class InfixCalculatorTest extends InfixCalculator {
 
     @Test
     public void test_solves_one_expression() throws InvalidOperatorException {
-        Expression exp = Expression.MIXED_MULTIPLY_AND_ADD;
+        Expression exp = Expression.ZERO_MULTIPLIER;
         assertEquals("for expression " + exp.expression, exp.result, icalc.calculate(exp.expression));
     }
 
@@ -54,6 +55,5 @@ public class InfixCalculatorTest extends InfixCalculator {
     public void test_handles_invalid_input() throws InvalidOperatorException {
         String invalidInput = "a+b+c";
         icalc.calculate(invalidInput);
-
     }
 }
