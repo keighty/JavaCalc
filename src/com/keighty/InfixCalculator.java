@@ -7,13 +7,13 @@ public class InfixCalculator {
     private Stack operandStack = new Stack<Integer>();
     boolean popStack = false;
 
-    public int calculate(String expression) {
+    public int calculate(String expression) throws InvalidOperatorException {
         populateStacks(expression);
         evaluateStacks();
         return (int) operandStack.pop();
     }
 
-    private void populateStacks(String expression) {
+    private void populateStacks(String expression) throws InvalidOperatorException {
         boolean seenNumeric = false;
         char[] charArr = expression.toCharArray();
         for (char item :
@@ -39,13 +39,16 @@ public class InfixCalculator {
         }
     }
 
-    private void handleOperatorCharacter(char operator) {
+    private void handleOperatorCharacter(char operator) throws InvalidOperatorException {
         switch (operator) {
             case '*':case '/':
                 popStack = true;
                 break;
-            default:
+            case '+':case '-':
                 popStack = false;
+                break;
+            default:
+                throw new InvalidOperatorException("invalid input: " + operator);
         }
     }
 

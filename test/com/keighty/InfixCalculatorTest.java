@@ -21,7 +21,8 @@ public class InfixCalculatorTest extends InfixCalculator {
         ADDITION_WITH_SPACES("5 + 7", 12),
         MULTI_DIGITS("12 + 3 - 5", 10),
         MULTI_DIGIT_MULTIPLICATION("12*6*2", 144),
-        MIXED_MULTIPLY_AND_ADD("12 * 6 + 2", 74);
+        MIXED_MULTIPLY_AND_ADD("12 * 6 + 2", 74),
+        MIXED_MULTIPLY_AND_ADD_INVERSE("2 + 12 * 6", 74);
 
         final String expression;
         final int result;
@@ -44,8 +45,15 @@ public class InfixCalculatorTest extends InfixCalculator {
     }
 
     @Test
-    public void test_solves_one_expression() {
+    public void test_solves_one_expression() throws InvalidOperatorException {
         Expression exp = Expression.MIXED_MULTIPLY_AND_ADD;
         assertEquals("for expression " + exp.expression, exp.result, icalc.calculate(exp.expression));
+    }
+
+    @Test(expected=InvalidOperatorException.class)
+    public void test_handles_invalid_input() throws InvalidOperatorException {
+        String invalidInput = "a+b+c";
+        icalc.calculate(invalidInput);
+
     }
 }
