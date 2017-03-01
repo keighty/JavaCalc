@@ -32,16 +32,6 @@ public class InfixCalculator {
         evaluateStacks();
     }
 
-    private void handleOperator(char item) throws InvalidOperatorException {
-        seenNumeric = false;
-        if (popStack || popFullStack) {
-            evaluateExpression();
-            popStack = false;
-        }
-        handleOperatorCharacter(item);
-        operatorStack.push(item);
-    }
-
     private void handleDigit(char item) {
         if (! seenNumeric) {
             handleSingleDigitChar(item);
@@ -59,6 +49,16 @@ public class InfixCalculator {
         int prevInt = (int) operandStack.pop();
         String newInt = String.valueOf(prevInt) + String.valueOf(item);
         operandStack.push(Integer.valueOf(newInt));
+    }
+
+    private void handleOperator(char item) throws InvalidOperatorException {
+        seenNumeric = false;
+        if (popStack || popFullStack) {
+            evaluateExpression();
+            popStack = false;
+        }
+        handleOperatorCharacter(item);
+        operatorStack.push(item);
     }
 
     private void handleOperatorCharacter(char operator) throws InvalidOperatorException {
@@ -90,8 +90,24 @@ public class InfixCalculator {
         if (operandStack.isEmpty()) throw new UnsupportedOperationException("no operand available");
 
         char operator = (char) operatorStack.pop();
-        if (operator == ')' || operator == '(') return;
-        processOperator(operator);
+        if (operator == ')' || operator == '(') {
+            handleParens(operator);
+        } else {
+            processOperator(operator);
+        }
+    }
+
+    private void handleParens(char operator) throws InvalidOperatorException {
+        if (')' == operator) {
+            // evaluate until '('
+            char op = (char) operatorStack.pop();
+            while ('(' != op) {
+                processOperator(op);
+                op = (char) operatorStack.pop();
+            }
+        } else {
+            return;
+        }
     }
 
     private void processOperator(char operator) throws InvalidOperatorException {
