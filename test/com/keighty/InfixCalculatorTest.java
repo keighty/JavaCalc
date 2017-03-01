@@ -24,7 +24,8 @@ public class InfixCalculatorTest extends InfixCalculator {
         MIXED_MULTIPLY_AND_ADD_INVERSE("2 + 12 * 6", 74),
         ZERO_MULTIPLIER("0 * 4567", 0),
         ZERO_INVERSE_MULTIPLIER("4 + 0 * 78903", 4),
-        SIMPLE_PARENS("1 + (2 * 3)", 7);
+        SIMPLE_PARENS("1 + (2 * 3)", 7),
+        COMPLEX_PARENS("(9 + 1) * 1", 10);
 
         final String expression;
         final int result;
@@ -48,7 +49,7 @@ public class InfixCalculatorTest extends InfixCalculator {
 
     @Test
     public void test_solves_one_expression() throws InvalidOperatorException, InvalidInputException {
-        Expression exp = Expression.SIMPLE_PARENS;
+        Expression exp = Expression.COMPLEX_PARENS;
         assertEquals("for expression " + exp.expression, exp.result, icalc.calculate(exp.expression));
     }
 

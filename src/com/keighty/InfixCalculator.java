@@ -11,6 +11,7 @@ public class InfixCalculator {
     public int calculate(String expression) throws InvalidOperatorException, InvalidInputException {
         if (expression.isEmpty()) throw new InvalidInputException("Invalid input: empty string");
         popStack = false;
+        popFullStack = false;
         populateStacks(expression);
         evaluateStacks();
         return (int) operandStack.pop();
