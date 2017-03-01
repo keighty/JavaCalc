@@ -7,37 +7,47 @@ public class InfixCalculator {
     private Stack operandStack = new Stack<Integer>();
     private boolean popStack;
     private boolean popFullStack;
+    private boolean seenNumeric;
 
     public int calculate(String expression) throws InvalidOperatorException, InvalidInputException {
         if (expression.isEmpty()) throw new InvalidInputException("Invalid input: empty string");
+
         popStack = false;
         popFullStack = false;
-        populateStacks(expression);
-        evaluateStacks();
+        seenNumeric = false;
+
+        char[] charArr = expression.toCharArray();
+        populateStacks(charArr);
         return (int) operandStack.pop();
     }
 
-    private void populateStacks(String expression) throws InvalidOperatorException {
-        boolean seenNumeric = false;
-        char[] charArr = expression.toCharArray();
-        for (char item :
-                charArr) {
+    private void populateStacks(char[] charArr) throws InvalidOperatorException {
+        for (char item : charArr) {
             if (Character.isDigit(item)) {
-                if (! seenNumeric) {
-                    handleSingleDigitChar(item);
-                    seenNumeric = true;
-                } else {
-                    handleMultiDigitChar(item);
-                }
+                handleDigit(item);
             } else if (! Character.isSpaceChar(item)) {
-                seenNumeric = false;
-                if (popStack || popFullStack) {
-                    evaluateExpression();
-                    popStack = false;
-                }
-                handleOperatorCharacter(item);
-                operatorStack.push(item);
+                handleOperator(item);
             }
+        }
+        evaluateStacks();
+    }
+
+    private void handleOperator(char item) throws InvalidOperatorException {
+        seenNumeric = false;
+        if (popStack || popFullStack) {
+            evaluateExpression();
+            popStack = false;
+        }
+        handleOperatorCharacter(item);
+        operatorStack.push(item);
+    }
+
+    private void handleDigit(char item) {
+        if (! seenNumeric) {
+            handleSingleDigitChar(item);
+            seenNumeric = true;
+        } else {
+            handleMultiDigitChar(item);
         }
     }
 

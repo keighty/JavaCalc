@@ -26,6 +26,7 @@ public class InfixCalculatorTest extends InfixCalculator {
         ZERO_INVERSE_MULTIPLIER("4 + 0 * 78903", 4),
         SIMPLE_PARENS("1 + (2 * 3)", 7),
         COMPLEX_PARENS("(9 + 1) * 1", 10);
+//        MOAR_PARENS("(9+1) * 2", 30);
 
         final String expression;
         final int result;
