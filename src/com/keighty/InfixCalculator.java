@@ -80,38 +80,40 @@ public class InfixCalculator {
         }
     }
 
-    private void evaluateStacks() {
+    private void evaluateStacks() throws InvalidOperatorException {
         while ( !operatorStack.isEmpty() ) {
             evaluateExpression();
         }
     }
 
-    private void evaluateExpression() {
+    private void evaluateExpression() throws InvalidOperatorException {
         if (operandStack.isEmpty()) throw new UnsupportedOperationException("no operand available");
 
         char operator = (char) operatorStack.pop();
         if (operator == ')' || operator == '(') return;
-        int value1 = (int) operandStack.pop();
-        int value2 = (int) operandStack.pop();
-        try {
-            operandStack.push(processOperator(operator, value2, value1));
-        } catch (InvalidOperatorException e) {
-            e.printStackTrace();
-        }
+        processOperator(operator);
     }
 
-    private int processOperator(char operator, int operand1, int operand2) throws InvalidOperatorException {
+    private void processOperator(char operator) throws InvalidOperatorException {
+        int operand1, operand2, value;
+        operand2 = (int) operandStack.pop();
+        operand1 = (int) operandStack.pop();
         switch (operator) {
             case '+':
-                return operand1 + operand2;
+                value = operand1 + operand2;
+                break;
             case '-':
-                return operand1 - operand2;
+                value = operand1 - operand2;
+                break;
             case '*':
-                return operand1 * operand2;
+                value = operand1 * operand2;
+                break;
             case '/':
-                return operand1 / operand2;
+                value = operand1 / operand2;
+                break;
             default:
                 throw new InvalidOperatorException("invalid operator: " + operator);
         }
+        operandStack.push(value);
     }
 }
